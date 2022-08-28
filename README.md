@@ -48,4 +48,4 @@ for (auto i : range(5, 10, 2))
 
  I don't think so, in this [benchmark](https://quick-bench.com/q/sH-grx17ViJT8NZ0bi7ovOx-UXw), `RangedIterator` is even faster than a normal for-loop (optimization flag set to `-O1`, you won't build your code without any optimization, will you?)
  
- Anyway it's just sugar syntax, most compiler will opimize it away.
+ Anyway it's just sugar syntax, most compilers will opimize it away.
