@@ -11,7 +11,7 @@
 
 #define DEFAULT_RANGE_STEP 1
 
-template <typename T = size_t>
+template <typename T>
 class RangedIterator {
 public:
     // https://stackoverflow.com/questions/64697790/sfinae-enable-if-cannot-be-used-to-disable-this-declaration
@@ -20,10 +20,9 @@ public:
         : m_from(0), m_to(to), m_step(DEFAULT_RANGE_STEP), m_i(1) { }
 
     template <int..., typename Ty = T, typename std::enable_if<std::is_convertible<int, Ty>::value, bool>::type = true>
-    constexpr RangedIterator(T from, T to, T step = DEFAULT_RANGE_STEP)
-        : m_from(from), m_to(to), m_step(step), m_i(from) { }
+    constexpr RangedIterator(T from, T to)
+        : m_from(from), m_to(to), m_step(DEFAULT_RANGE_STEP), m_i(from) { }
 
-    template <int..., typename Ty = T, typename std::enable_if<!std::is_convertible<int, Ty>::value, bool>::type = true>
     constexpr RangedIterator(T from, T to, T step)
         : m_from(from), m_to(to), m_step(step), m_i(from) { }
 
