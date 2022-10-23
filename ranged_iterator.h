@@ -2,6 +2,7 @@
 #define RANGED_ITERATOR_H
 
 #include <type_traits>
+#include <cmath>
 
 /**
  * Requirement:
