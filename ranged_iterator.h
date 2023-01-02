@@ -12,51 +12,57 @@
 
 #define DEFAULT_RANGE_STEP 1
 
-template <typename T>
-class RangedIterator {
+/** Bidirectional: allowing both counting up and down
+ *  I intended to create 2 aliases (range & brange) but alias template deduction is only availble since C++20 :(
+ */
+
+template <typename T, bool Bidirectional = true>
+class range {
 public:
     // https://stackoverflow.com/questions/64697790/sfinae-enable-if-cannot-be-used-to-disable-this-declaration
     template <int..., typename Ty = T, typename std::enable_if<std::is_convertible<int, Ty>::value, bool>::type = true>
-    constexpr RangedIterator(T to)
+    constexpr range(T to)
         : m_from(0), m_to(to), m_step(DEFAULT_RANGE_STEP), m_i(1) { }
 
     template <int..., typename Ty = T, typename std::enable_if<std::is_convertible<int, Ty>::value, bool>::type = true>
-    constexpr RangedIterator(T from, T to)
+    constexpr range(T from, T to)
         : m_from(from), m_to(to), m_step(DEFAULT_RANGE_STEP), m_i(from) { }
 
-    constexpr RangedIterator(T from, T to, T step)
+    constexpr range(T from, T to, T step)
         : m_from(from), m_to(to), m_step(step), m_i(from) { }
 
-    constexpr RangedIterator<T>& step(T step) {
+    constexpr range<T>& step(T step) {
         m_step = step;
         return *this;
     }
 
-    constexpr RangedIterator<T> begin() const {
-        return RangedIterator<T>(m_from, m_to, m_step);
+    constexpr range<T> begin() const {
+        return range<T>(m_from, m_to, m_step);
     }
 
-    constexpr RangedIterator<T> end() const {
-        RangedIterator<T> iter(m_from, m_to, m_step);
+    constexpr range<T> end() const {
+        range<T> iter(m_from, m_to, m_step);
         iter.m_i = m_to;
         return iter;
     }
 
-    constexpr bool operator!= (const RangedIterator<T>& rhs) const {
+    constexpr bool operator!= (const range<T>& rhs) const {
         if (m_i == rhs.m_i)
             return false;
+
+        // don't count down
+        if (m_step < 0 || m_to < m_from)
+            return false;
+
         // since we allow arbitrary step, we must check i is actual in range or not
-        // if we only checks for differentness, it can cause infinite loop (stepped to far from the end iterator)
-        if (m_i < std::min(m_from, m_to) || std::max(m_from, m_to) < m_i)
+        // if we only checks for the differences, it can cause infinite loop (stepped to far from the end iterator)
+        if (m_i < m_from || m_to < m_i)
             return false;
         return true;
     }
 
-    constexpr const RangedIterator<T>& operator++() {
-        if (m_from < m_to)
-            m_i += m_step;
-        else
-            m_i -= m_step;
+    constexpr const range<T>& operator++() {
+        m_i += m_step;
         return *this;
     }
 

@@ -1,9 +1,6 @@
 #include <iostream>
 #include "ranged_iterator.h"
 
-// you can just use RangedIterator as it is, or name your own
-#define range RangedIterator
-
 int main() {
     // output: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 
     for (const auto i : range(10)) {
@@ -19,12 +16,6 @@ int main() {
 
     // output: -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
     for (const auto i : range(-10, 10)) {
-        std::cout << i << ", ";
-    }
-    std::cout << std::endl;
-
-    // output: 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9,
-    for (const auto i : range(10, -10)) {
         std::cout << i << ", ";
     }
     std::cout << std::endl;
