@@ -12,11 +12,7 @@
 
 #define DEFAULT_RANGE_STEP 1
 
-/** Bidirectional: allowing both counting up and down
- *  I intended to create 2 aliases (range & brange) but alias template deduction is only availble since C++20 :(
- */
-
-template <typename T, bool Bidirectional = true>
+template <typename T>
 class range {
 public:
     // https://stackoverflow.com/questions/64697790/sfinae-enable-if-cannot-be-used-to-disable-this-declaration
